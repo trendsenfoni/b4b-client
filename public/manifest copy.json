@@ -1,0 +1,42 @@
+{
+  "background_color": "#070718",
+  "description": "Emin Civata",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "EminCivata",
+  "orientation": "portrait-primary",
+  "scope": "/emincivata",
+  "short_name": "EminCivata",
+  "start_url": "/emincivata",
+  "theme_color": "#a82925",
+  "prefer_related_applications": false,
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "fullscreen"
+  ],
+  "launch_handler": {
+    "client_mode": [
+      "focus-existing",
+      "auto"
+    ]
+  },
+  "icons": [
+    {
+      "src": "https://trendsenfoni.com/img/emin-civata/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "id": "/emincivata",
+  "lang": "en",
+  "categories": [
+    "business",
+    "finance",
+    "productivity"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 600
+  }
+}
