@@ -42,6 +42,7 @@ const LayoutClientSide = ({ store }: Props) => {
             {
               secure: true,
               path: `/${store}`,
+              //TODO 5 dakika yerine bir kac saate cikartalim
               expires: new Date(new Date().setMinutes(new Date().getMinutes() + 5))
             }
           )

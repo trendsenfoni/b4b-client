@@ -14,6 +14,7 @@ import { AdminUserType } from '@/types/AdminUserType'
 // import { getAuthUser, getDatabases } from '@/lib/authHelper'
 import Cookies from 'js-cookie'
 import { MemberType } from '@/types/MemberType'
+import { useToast } from '@/components/ui/use-toast'
 
 interface Props {
   store: string
@@ -60,7 +61,7 @@ const DashboardUserMenu: FC<Props> = ({ store }) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem>
-          <Link href="/me" className='flex flex-col'>
+          <Link href={`/${store}/me`} className='flex flex-col'>
             <span className=''>{userInfo?.fullName}</span>
             <span className='text-sm'>{userInfo?.email}</span>
           </Link>

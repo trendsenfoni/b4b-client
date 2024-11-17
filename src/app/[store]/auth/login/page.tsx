@@ -32,8 +32,8 @@ export default function LoginPage({ params }: Props) {
       </Tabs>
       {/* </div> */}
     </div>
-    <Link href="https://trendsenfoni.com" target='_blank' className='absolute bottom-0 right-2 text-right text-xs text-gray-500 hover:text-blue-600'>
-      ©2014-{new Date().getFullYear()} TrendSenfoni Software Company
+    <Link href="https://trendsenfoni.com" target='_blank' className='absolute bottom-0 left-2 text-right text-xs text-gray-500 hover:text-blue-600'>
+      ©2014-{new Date().getFullYear()} {process.env.NEXT_PUBLIC_APP_COMPANY_NAME || 'TrendSenfoni'}
     </Link>
   </div>)
 }

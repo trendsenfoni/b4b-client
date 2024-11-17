@@ -7,12 +7,14 @@ import { useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
 import { useToast } from "@/components/ui/use-toast"
 import { Label } from '@/components/ui/label'
+import ButtonLink from '@/components/button-link'
+import { InputOTPBox } from '@/components/input-otp'
 
 interface Props {
-
-  className?: string
+  // email?: string,
+  className?: string,
   children?: any
-  variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined
+  variant?: "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined,
   store: string
 }
 export function SignInEmail({
@@ -24,22 +26,33 @@ export function SignInEmail({
 }: Props) {
   const router = useRouter()
   const { toast } = useToast()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const loginWithEmailPassword = () => {
+  const [email, setEmail] = useState('alitek@gmail.com')  //TODO email silinecek
+  const [taxNumber, setTaxNumber] = useState('20756266352') //TODO TCKN silinecek
+  const [step, setStep] = useState(1)
+  const [authCode, setAuthCode] = useState('')
+  const loginWithEmail = () => {
     const deviceId = Cookies.get('deviceId')
-    postItem('/auth/login', '', { email: email, password: password, deviceId: deviceId })
+    postItem(`/${store}/auth/login`, '', { taxNumber: taxNumber, email: email, deviceId: deviceId })
       .then(result => {
-        console.log('EMailPasswordSignIn result:', result)
-        Cookies.set('token', result.token, { secure: true })
-        Cookies.set('user', JSON.stringify(result.user), { secure: true })
-        // Cookies.set('dbList', JSON.stringify(result.dbList || []), { secure: true })
-        // Cookies.set('db', result.db || '', { secure: true })
-        // Cookies.set('firm', result.firm || '', { secure: true })
-        // Cookies.set('period', result.period || '', { secure: true })
-        Cookies.set('lang', result.lang || 'tr', { secure: true })
+        console.log(result)
+        setStep(2)
+      })
+      .catch(err => {
+        toast({ title: 'Error', description: err, variant: 'destructive', duration: 1000 })
+        console.log('Hata:', err)
+      })
+  }
 
-        router.push('/home')
+  const verifyWithEmail = () => {
+
+    postItem(`/${store}/auth/verify`, '', { email: email, authCode: authCode })
+      .then(result => {
+        console.log(result)
+        Cookies.set('token', result.token, { secure: true, path: `/${store}` })
+        Cookies.set('user', JSON.stringify(result.user), { secure: true, path: `/${store}` })
+        Cookies.set('lang', result.lang || 'tr', { secure: true, path: `/${store}` })
+
+        router.push(`/${store}/home`)
 
       })
       .catch(err => {
@@ -49,31 +62,51 @@ export function SignInEmail({
   }
 
 
-  return (
-    <div className='flex flex-col gap-2' >
-      <div className={`grid grid-cols-12 gap-1 w-full mb-2 ${className}`}>
-        <div className="relative col-span-12">
-          <Input
-            className='ps-2'
-            type='email'
-            placeholder='Kullanıcı adı veya Email'
-            onChange={e => setEmail(e.target.value)}
-          />
+  return (<>
+    {step == 1 &&
+      <div className='flex flex-col gap-2' >
+        <div className={`grid grid-cols-12 gap-1 w-full mb-2 ${className}`}>
+          <div className="relative col-span-12 flex flex-col gap-2">
+            <Label>Email</Label>
+            <Input type='email' className='ps-2' placeholder='xxxxx@yyyyy.com'
+              min={10}
+              defaultValue={email}
+              onChange={e => setEmail(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className='flex flex-col gap-2'>
+          <Label>Vergi No veya TC Kimlik No</Label>
+          <div className={`flex flex-row gap-2 w-full ${className}`}>
+            <Input type='number' className='ps-2' placeholder='Vkn/Tckn'
+              max={11} min={10}
+              defaultValue={taxNumber}
+              onChange={e => setTaxNumber(e.target.value)}
+            />
+            <Button className={`w-14`} variant={variant || 'default'}
+              onClick={loginWithEmail}
+            >
+              <i className="text-xl fa-solid fa-right-to-bracket"></i>
+            </Button>
+          </div>
+
         </div>
       </div>
-      <div className={`flex flex-row gap-2 w-full ${className}`}>
-        <Input
-          className='ps-2'
-          type='password'
-          placeholder='Şifre'
-          onChange={e => setPassword(e.target.value)}
-        />
-        <Button className={`w-14`} variant={variant || 'default'}
-          onClick={loginWithEmailPassword}
-        >
-          <i className="text-xl fa-solid fa-right-to-bracket"></i>
-        </Button>
+    }
+    {step == 2 &&
+      <div className='flex flex-col gap-4' >
+        <div className='flex flex-col items-center gap-4'>
+          <div className='flex flex-col items-center gap-2'>
+            <Label className='text-xl'>Onay Kodu</Label>
+            <Label className='text-lg text-primary'>{email}</Label>
+          </div>
+          <InputOTPBox onChange={e => setAuthCode(e)} />
+        </div>
+        <div className='flex justify-end gap-4 mt-4'>
+          <Button variant={'outline'} onClick={() => setStep(1)} ><i className='fa-solid fa-chevron-left'></i></Button>
+          <Button disabled={authCode.length < 6} variant={'default'} onClick={verifyWithEmail} ><i className='fa-solid fa-check'></i></Button>
+        </div>
       </div>
-    </div>
-  )
+    }
+  </>)
 }

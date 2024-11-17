@@ -6,13 +6,13 @@ interface Props {
     store: string
   }
 }
-export default function AccountingPage({ params }: Props) {
+export default function OrdersPage({ params }: Props) {
 
   return (<>
     <BreadcrumbAbi store={params.store} list={[
-      { href: `/accounting`, children: "Cari" },
+      { href: `/orders`, children: "Siparişler" },
     ]} />
-    <h1 ><i className="fa-solid fa-file-invoice me-2"></i> Cari</h1>
+    <h1 ><i className="fa-solid fa-dragon me-2"></i> Siparişler</h1>
     <hr />
 
   </>)

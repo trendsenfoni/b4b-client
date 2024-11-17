@@ -43,14 +43,14 @@ export function DashboardHeader({ store }: Props) {
       </div>
       <div className="flex items-center gap-2">
         <DashboardUserMenu store={store} />
-        <div className='flex md:hidden'><MobileMenu /></div>
+        <div className='flex md:hidden'><MobileMenu store={store} /></div>
 
       </div>
     </header>
   )
 }
 
-function MobileMenu() {
+function MobileMenu({ store }: { store: string }) {
   return (<>
     <DropdownMenu >
       <DropdownMenuTrigger asChild  >
@@ -64,25 +64,25 @@ function MobileMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" >
         <DropdownMenuItem>
-          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href="/home">
+          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href={`/${store}/home`}>
             <i className="fa-solid fa-house-chimney-window me-2 text-lg text-primary"></i>
             Ana Sayfa
           </CustomLink>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href="/addNewOrder">
+          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href={`/${store}/shopping`}>
             <i className="fa-solid fa-dolly me-2 text-lg text-primary"></i>
             Ürünler
           </CustomLink>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href="/purchasing">
+          <CustomLink className="rounded-md  py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href={`/${store}/orders`}>
             <i className="fa-solid fa-dragon me-2 text-lg text-primary"></i>
             Siparişler
           </CustomLink>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <CustomLink className="rounded-md py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href="/inventory">
+          <CustomLink className="rounded-md py-2 hover:bg-gray-100 dark:hover:bg-gray-800" href={`/${store}/accounting`}>
             <i className="fa-solid fa-file-invoice me-2 text-lg text-primary"></i>
             Cari
           </CustomLink>
@@ -97,6 +97,6 @@ function MobileMenu() {
         </DropdownMenuItem> */}
 
       </DropdownMenuContent>
-    </DropdownMenu>
+    </DropdownMenu >
   </>)
 }

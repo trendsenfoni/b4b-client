@@ -1,11 +1,15 @@
+import { AddressField } from './AddressField'
 import { AddressType, CountryType } from './AddressType'
 
 export interface FirmType {
   _id?: string
   type?: string | 'customer' | 'vendor' | undefined
+  code?: string
   name?: string
+  description?: string
+  phoneNumber?: string
+  email?: string
   currency?: string
-  itemArticle?: string
   billingInfo?: {
     individual?: boolean
     companyName?: string
@@ -15,19 +19,10 @@ export interface FirmType {
     taxNumber?: string
     idCardNo?: string
   }
-  address?: {
-    room?: string
-    streetName?: string
-    blockName?: string
-    buildingName?: string
-    buildingNumber?: string
-    citySubdivisionName?: string
-    cityName?: string
-    postalZone?: string
-    postbox?: string
-    region?: string
-    district?: string
-    country?: CountryType
-  }
+  address?: AddressField
+  salesman?: string
+  priceGroup?: string
+  discountGroup?: string
+  lastModified?: string
   passive?: boolean
 }

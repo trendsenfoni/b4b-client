@@ -1,5 +1,8 @@
+import { FirmType } from './FirmType'
+
 export interface MemberType {
   _id?: string
+  firm?: FirmType
   username?: string
   email?: string
   password?: string
