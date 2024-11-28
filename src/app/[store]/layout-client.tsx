@@ -34,30 +34,33 @@ const LayoutClientSide = ({ store }: Props) => {
   }
 
   useEffect(() => {
-    if (!storeVal) {
-      getItem(`/pub/stores/${store}`, '')
-        .then(result => {
-          Cookies.set('store',
-            JSON.stringify(result as StoreType),
-            {
-              secure: true,
-              path: `/${store}`,
-              //TODO 5 dakika yerine bir kac saate cikartalim
-              expires: new Date(new Date().setMinutes(new Date().getMinutes() + 5))
-            }
-          )
-          location.reload()
-          // checkToken()
-        })
-        .catch(err => {
-          toast({ title: 'Error', description: err, variant: 'destructive' })
-          setTimeout(() => router.push(`/store-not-found?error=${err}`), 1000)
-        })
+    if (typeof window != 'undefined') {
+      if (!storeVal) {
+        getItem(`/pub/stores/${store}`, '')
+          .then(result => {
 
-    } else {
-      checkToken()
+            Cookies.set('store',
+              JSON.stringify(result as StoreType),
+              {
+                secure: true,
+                path: `/${store}`,
+                //TODO 5 dakika yerine bir kac saate cikartalim
+                // expires: new Date(new Date().setMinutes(new Date().getMinutes() + 2))
+                expires: new Date(new Date().setHours(new Date().getHours() + 48))
+              }
+            )
+
+            setTimeout(() => location.reload(), 300)
+            // checkToken()
+          })
+          .catch(err => {
+            toast({ title: 'Error', description: err, variant: 'destructive' })
+            setTimeout(() => router.push(`/store-not-found?error=${err}`), 1000)
+          })
+      } else {
+        checkToken()
+      }
     }
-
   }, [])
 
   return (<></>)
