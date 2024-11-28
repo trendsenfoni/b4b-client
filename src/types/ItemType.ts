@@ -10,9 +10,12 @@ export interface ItemType {
   description?: string
   manufacturerCode?: string
   barcode?: string
+  price?: number
   vatRate?: number
   withHoldingTaxRate?: number
+  netPrice?: number
   unit?: string
+  currency?: string
   lastModified?: string
   passive?: boolean
 }

@@ -24,6 +24,15 @@ import { ItemType } from '@/types/ItemType'
 import { getList } from '@/lib/fetch'
 import Cookies from 'js-cookie'
 import { Button } from '@/components/ui/button'
+import { ButtonInfo } from '@/components/button-information'
+import { Label } from '@/components/ui/label'
+import { Skeleton } from '@/components/ui/skeleton'
+import { RowButtonAddNew } from '@/components/row-buttons'
+import { ComboboxItemGroup } from './combobox-itemGroup'
+import { ComboboxItemSubGroup } from './combobox-itemSubGroup'
+import { SubGroupType } from '@/types/SubGroupType'
+import { ComboboxItemCategory } from './combobox-itemCategory'
+import { ComboboxItemBrand } from './combobox-itemBrand'
 interface Props {
   store: string
 }
@@ -36,11 +45,18 @@ export function ItemList({ store }: Props) {
   const { toast } = useToast()
   const [pagination, setPagination] = useState<PaginationType>({ pageCount: 0, page: 1, pageSize: 10, totalDocs: 0 })
   const [search, setSearch] = useState('')
+  const [group, setGroup] = useState('')
+  const [subGroup, setSubGroup] = useState<SubGroupType | undefined>({})
+  const [category, setCategory] = useState('')
+  const [brand, setBrand] = useState('')
 
   const load = (pageNo?: number, s?: string) => {
     let url = `/${store}/items?pageSize=${pagination.pageSize}&page=${pageNo || pagination.page}`
     if (s != undefined) url += `&search=` + encodeURIComponent(s)
-
+    if (group) url += `&group=` + encodeURIComponent(group)
+    if (subGroup && subGroup.subGroup) url += `&subGroup=` + encodeURIComponent(subGroup.subGroup)
+    if (category) url += `&category=` + encodeURIComponent(category)
+    if (brand) url += `&brand=` + encodeURIComponent(brand)
     setLoading(true)
     getList(url, token)
       .then(result => {
@@ -53,14 +69,18 @@ export function ItemList({ store }: Props) {
   }
   useEffect(() => { !token && setToken(Cookies.get('token') || '') }, [])
   useEffect(() => { token && load(1, '') }, [token])
+  useEffect(() => { token && load(1, search) }, [group, subGroup, category, brand])
 
   return (<>
-    <div className='flex flex-col gap-4 w-full'>
+    <div className='flex flex-col gap-1 w-full'>
+      {/* <div className='grid grid-cols-1 md:grid-cols-7 gap-4 '> */}
       <div className='grid grid-cols-1 md:grid-cols-7 gap-4 '>
-        <h1 className='text-3xl ms-2 flex gap-4 md:col-span-3 text-primary'>
-          <i className="fa-solid fa-boxes-stacked me-2"></i> Ürünler
-        </h1>
-        <div className='flex flex-row items-center justify-end  md:col-span-4'>
+        <div className='md:col-span-3'>
+          <h1 className='text-3xl ms-2 hidden md:flex gap-4 text-primary'>
+            <i className="fa-solid fa-boxes-stacked me-2"></i> Ürünler
+          </h1>
+        </div>
+        <div className='flex flex-row items-center justify-end  md:col-span-4 gap-2'>
           {/* <div className='grid grid-cols-1 md:grid-cols-2 gap-2 w-full'> */}
           <div className="relative flex-grow md:max-w-80">
             <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
@@ -77,69 +97,102 @@ export function ItemList({ store }: Props) {
               onKeyDown={e => e.code == 'Enter' && load(1, search)}
             />
           </div>
-          <div className='flex-shrink mx-4'>
-            <i className="fa-solid fa-filter"></i>
+          <div className='flex-shrink'>
+            <ButtonInfo text={<i className='fa-solid fa-filter'></i>} >
+              <div className='flex flex-col gap-2'>
+                <div>
+                  <Label>Ana Grup</Label>
+                  <ComboboxItemGroup store={store} width='w-full'
+                    defaultValue={group}
+                    defaultSubGroup={subGroup}
+                    onChange={e => setGroup(e || '')}
+                    onChangeSubGroup={e => setSubGroup(e)}
+                  />
+                </div>
+
+                <div>
+                  <Label>Kategori</Label>
+                  <ComboboxItemCategory store={store} width='w-full'
+                    defaultValue={category}
+                    onChange={e => setCategory(e || '')}
+                  />
+                </div>
+                <div>
+                  <Label>Marka</Label>
+                  <ComboboxItemBrand store={store} width='w-full'
+                    defaultValue={brand}
+                    onChange={e => setBrand(e || '')}
+                  />
+                </div>
+              </div>
+            </ButtonInfo>
           </div>
           {/* </div> */}
         </div>
       </div>
-      <hr />
+      {/* <div>
+        Filtre: {group}- {subGroup?.subGroup} - {category}
+      </div> */}
+      {/* <hr /> */}
+      <div className='grid grid-cols-12 w-full  font-bold text-sm md:text-base'>
+        <div className='col-span-4'>Ürün/Kod</div>
+        <div className='col-span-3'>Üretici</div>
+        <div className='col-span-3 text-right'>Fiyat</div>
+        <div className="col-span-2 text-right pe-4">#</div>
+      </div>
       {!loading && <>
-        <Table className=''>
-          <TableHeader >
-            <TableRow >
-              <TableHead className='p-1'>Ürün</TableHead>
-              <TableHead className='p-1'>Üretici</TableHead>
-              <TableHead className='p-1'>Fiyat</TableHead>
-              <TableHead className="text-center w-14 text-2xl">
-                #
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody >
-            {list.map(e => (
-              <TableRow key={e._id} className=''>
-                <TableCell >
-                  <div className='flex flex-col'>
-                    {e.name}
-                    <span className='text-xs text-muted-foreground'>{e.code}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className='flex flex-col'>
-                    {e.brand}
-                    <span className='text-xs text-muted-foreground'>{e.manufacturerCode}</span>
-                  </div>
-                </TableCell>
-                <TableCell >
-                  <div className="font-medium flex flex-col">
-                    55
-                  </div>
-                </TableCell>
 
-                <TableCell className="flex justify-center align-middle gap1-4 text-xl">
-                  <Button variant={'outline'} onClick={() => alert(e.name)} >
+        {list.map((e, index) => (
+          <div key={e._id} className={`flex flex-col w-full text-xs md:text-base `}>
+            <div className={`flex flex-col w-full ${index % 2 == 0 ? ' bg-slate-400' : 'bg-amber-500'} bg-opacity-5 p-2`}>
+              <div className='flex flex-col w-full'>
+                {e.name}
+              </div>
+              <div className='grid grid-cols-12 w-full'>
+                <div className='col-span-4 flex flex-col  text-xs text-muted-foreground'>
+                  <span >{e.code}</span>
+                  <span >{e.group} group</span>
+                </div>
+                <div className='col-span-3 flex flex-col'>
+                  {e.brand}
+                  <span className='text-xs text-muted-foreground'>{e.manufacturerCode}</span>
+                </div>
+                <div className="col-span-3 font-bold flex flex-col text-right">
+                  {(e.price || 0) > 0 && <>
+                    <span className='flex justify-end'>{e.price} <span className='text-[70%] ms-1'>{e.currency == 'TRY' ? 'TL' : e.currency}</span></span>
+
+                    <div className='flex flex-col justify-between'>
+                      <div className='text-xs text-muted-foreground'>Kdv%: <span className='font-bold text-sm text-amber-600'>{e.vatRate}</span> </div>
+                      <div className='text-xs text-muted-foreground'>Net: <span className='font-bold text-sm text-blue-500'>{e.netPrice}</span></div>
+                    </div>
+                  </>}
+                </div>
+                <div className="col-span-2 flex justify-end align-middle gap1-4 text-xl">
+                  <RowButtonAddNew onClick={() => alert(e.name)} />
+                  {/* <Button className='p-2' variant={'outline'} onClick={() => alert(e.name)} >
                     <i className="fa-solid fa-square-plus"></i>
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter className='bg-transparent'>
-            <TableRow className=' hover:bg-transparent'>
-              <TableCell colSpan={4} >
-                <Pagination pagination={pagination} onPageClick={(pageNo: number) => {
-                  setPagination({ ...pagination, page: pageNo })
-                  load(pageNo, search)
-                }} />
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+                  </Button> */}
+                </div>
+              </div>
+
+            </div>
+          </div>
+        ))}
+        <Pagination pagination={pagination} onPageClick={(pageNo: number) => {
+          setPagination({ ...pagination, page: pageNo })
+          load(pageNo, search)
+        }} />
       </>}
-      {loading && <div className='flex w-full h-full justify-center items-center'>
-        <Loading />
-      </div>}
-    </div>
+      {loading && Array.from(Array(10).keys()).map(e => (
+        <div key={e} className='my-2'>
+          <div className='grid grid-cols-4 gap-2'>
+            <Skeleton className="h-8 " />
+            <Skeleton className="h-8 " />
+            <Skeleton className="h-8 " />
+            <Skeleton className="h-8 " />
+          </div>
+        </div>
+      ))}
+    </div >
   </>)
 }

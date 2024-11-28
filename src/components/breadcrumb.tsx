@@ -18,7 +18,7 @@ interface Props {
 }
 export function BreadcrumbAbi({ store, list = [] }: Props) {
   return (
-    <Breadcrumb className='mx-3 mt-1 mb-4'>
+    <Breadcrumb className='mx-3 mt-1 mb-0 md:mb-4'>
       <BreadcrumbList>
         <BreadcrumbItem key={`breadcrumb-item-home`}>
           <BreadcrumbLink href={`/${store}/home`}><i className="fa-solid fa-house-chimney-window"></i></BreadcrumbLink>

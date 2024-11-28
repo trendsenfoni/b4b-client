@@ -27,7 +27,7 @@ export function RowButtonAddNew({
 }: Props) {
   return (
     <Link
-      className={`px-2 py-1 bg-green-700 text-white rounded-sm ${className}`}
+      className={`px-2 py-1 bg-green-700 text-white rounded-sm h-9 ${className}`}
       href={href}
       onClick={() => onClick && onClick()}>
       <i className="fa-solid fa-square-plus"></i>

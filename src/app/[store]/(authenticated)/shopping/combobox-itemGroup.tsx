@@ -20,35 +20,52 @@ import {
 } from "@/components/ui/popover"
 import Cookies from 'js-cookie'
 import { useToast } from '@/components/ui/use-toast'
-import { Item } from '@/types/Item'
+import { Label } from '@/components/ui/label'
+import { ComboboxItemSubGroup } from './combobox-itemSubGroup'
+import { SubGroupType } from '@/types/SubGroupType'
+import { Skeleton } from '@/components/ui/skeleton'
+// import { ItemType } from '@/types/ItemType'
 
 interface Props {
-  defaultValue?: Item
-  onChange?: (val?: Item) => void
+  store: string
+  defaultValue?: string
+  defaultSubGroup?: SubGroupType
+  onChange?: (val?: string) => void
+  onChangeSubGroup?: (val?: SubGroupType) => void
   width?: string
 }
-export function ComboboxItemList({
+export function ComboboxItemGroup({
+  store,
   defaultValue,
+  defaultSubGroup,
   onChange,
+  onChangeSubGroup,
   width = "w-300px"
 }: Props) {
   const [open, setOpen] = useState(false)
   const [token, settoken] = useState('')
-  const [obj, setObj] = useState<Item | undefined>(defaultValue)
-  const [list, setList] = useState<Item[]>([])
+  const [obj, setObj] = useState<string | undefined>(defaultValue)
+  const [list, setList] = useState<string[]>([])
   const [search, setSearch] = useState('')
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
+  const [loadingSub, setLoadingSub] = useState(false)
+  // const [group, setGroup] = useState('')
+  const [subGroup, setSubGroup] = useState<SubGroupType | undefined>(defaultSubGroup)
 
   const load = (s?: string) => {
 
     setLoading(true)
-    getList(`/db/items?pageSize=50&search=${s || search || ''}`, token)
+    setLoadingSub(true)
+    getList(`/${store}/items/groups?search=${s || search || ''}`, token)
       .then(result => {
-        setList(result.docs as Item[])
+        setList(result as string[])
       })
       .catch(err => toast({ title: 'Error', description: err || '', variant: 'destructive' }))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+        setLoadingSub(false)
+      })
   }
 
   useEffect(() => { !token && settoken(Cookies.get('token') || '') }, [])
@@ -65,10 +82,11 @@ export function ComboboxItemList({
             aria-expanded={open}
             className={`${width} justify-between`}
           >
-            {obj ? obj?.name : "Seçiniz..."}
+            {obj ? obj : "Hepsi..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         }
+
       </PopoverTrigger>
 
       <PopoverContent className={`${width} p-0`}>
@@ -86,23 +104,30 @@ export function ComboboxItemList({
             <CommandGroup>
               {list.map(e => (
                 <CommandItem
-                  key={e._id}
-                  value={e.name}
+                  key={e}
+                  value={e}
                   onSelect={e => {
-                    console.log('e:', e)
-                    let choosen = list.find(k => k.name == e)
+                    setLoadingSub(true)
+                    let choosen = list.find(k => k == e)
                     setObj(choosen)
-                    if (onChange) onChange(choosen)
+                    if (onChange) {
+                      onChange(choosen)
+                      setSubGroup(undefined)
+                      onChangeSubGroup && onChangeSubGroup({ subGroup: '' })
+                    }
                     setOpen(false)
+                    // setLoading(false)
+                    setTimeout(() => setLoadingSub(false), 100)
+
                   }}
                 >
                   <Check
                     className={cn(
                       "mr-2 h-4 w-4",
-                      obj?._id === e._id ? "opacity-100" : "opacity-0"
+                      obj === e ? "opacity-100" : "opacity-0"
                     )}
                   />
-                  {e.name}
+                  {e == '' ? '...Hepsi...' : e}
                 </CommandItem>
               ))}
             </CommandGroup>
@@ -110,5 +135,20 @@ export function ComboboxItemList({
         </Command>
       </PopoverContent>
     </Popover>
+
+
+    <div>
+      <Label>Alt Group</Label>
+      {!loadingSub && obj &&
+        <ComboboxItemSubGroup store={store} group={obj} width='w-full' defaultValue={subGroup} onChange={e => {
+          setSubGroup(e)
+          onChangeSubGroup && onChangeSubGroup(e)
+        }} />
+      }
+      {(loadingSub || !obj) &&
+        <div className='w-full h-10 border rounded-md flex items-center text-sm text-muted-foreground ps-2'>Ana Grup Seçiniz...</div>
+      }
+    </div>
+
   </div>)
 }
