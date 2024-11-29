@@ -33,6 +33,7 @@ import { ComboboxItemSubGroup } from './combobox-itemSubGroup'
 import { SubGroupType } from '@/types/SubGroupType'
 import { ComboboxItemCategory } from './combobox-itemCategory'
 import { ComboboxItemBrand } from './combobox-itemBrand'
+import { AddToCart } from './add-to-cart'
 interface Props {
   store: string
 }
@@ -151,7 +152,7 @@ export function ItemList({ store }: Props) {
               <div className='grid grid-cols-12 w-full'>
                 <div className='col-span-4 flex flex-col  text-xs text-muted-foreground'>
                   <span >{e.code}</span>
-                  <span >{e.group} group</span>
+                  <span >{e.group}</span>
                 </div>
                 <div className='col-span-3 flex flex-col'>
                   {e.brand}
@@ -167,11 +168,11 @@ export function ItemList({ store }: Props) {
                     </div>
                   </>}
                 </div>
-                <div className="col-span-2 flex justify-end align-middle gap1-4 text-xl">
-                  <RowButtonAddNew onClick={() => alert(e.name)} />
-                  {/* <Button className='p-2' variant={'outline'} onClick={() => alert(e.name)} >
-                    <i className="fa-solid fa-square-plus"></i>
-                  </Button> */}
+                <div className="col-span-2 flex justify-end align-m11iddle gap1-4 text-xl">
+                  <AddToCart item={e} onAddToCart={quantity => {
+                    alert(quantity)
+                  }} />
+
                 </div>
               </div>
 

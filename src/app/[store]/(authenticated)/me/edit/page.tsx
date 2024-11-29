@@ -11,14 +11,14 @@ import { getItem, postItem } from '@/lib/fetch'
 import CustomLink from '@/components/custom-link'
 import { Textarea } from '@/components/ui/textarea'
 import { Switch } from '@/components/ui/switch'
-import { AdminUserType } from '@/types/AdminUserType'
+import { MemberType } from '@/types/MemberType'
 import { useToast } from '@/components/ui/use-toast'
 
 export default function MeEditPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [token, settoken] = useState('')
-  const [user, setUser] = useState<AdminUserType>({})
+  const [user, setUser] = useState<MemberType>({})
   const [newLink, setNewLink] = useState('')
 
   const save = () => {
@@ -35,7 +35,7 @@ export default function MeEditPage() {
   useEffect(() => {
     if (token) {
       getItem('/me', token)
-        .then(result => setUser(result as AdminUserType))
+        .then(result => setUser(result as MemberType))
         .catch(err => toast({ title: 'Error', description: err || '', variant: 'destructive' }))
     }
   }, [token])

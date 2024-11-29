@@ -2,19 +2,13 @@
 
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-// import { SignOut } from '@/widgets/auth-components'
 import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuShortcut, DropdownMenuPortal } from "@/components/ui/dropdown-menu"
 import ThemeToggleButton from '@/components/theme-toggle-button'
-// import { useRouter } from 'next/router'
-// import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import SignOutButton from './signout-button'
 import { FC, useEffect, useState } from 'react'
-import { AdminUserType } from '@/types/AdminUserType'
-// import { getAuthUser, getDatabases } from '@/lib/authHelper'
 import Cookies from 'js-cookie'
 import { MemberType } from '@/types/MemberType'
-import { useToast } from '@/components/ui/use-toast'
 
 interface Props {
   store: string
