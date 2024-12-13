@@ -56,8 +56,10 @@ export function ShoppingCart({ store, cartTotal }: Props) {
     postItem(`/${store}/carts/save`, token, { note: note })
       .then(result => {
         // load()
-
-        toast({ title: 'Sipariş başarıyla kaydedildi', duration: 3000 })
+        toast({ title: 'Sipariş başarıyla kaydedildi', duration: 2000 })
+        setTimeout(() => {
+          location.reload()
+        }, 2000)
       })
       .catch(err => toast({ title: 'Error', description: err || '', variant: 'destructive' }))
       .finally(() => setLoading(false))
