@@ -17,8 +17,8 @@ export default function pageMeta(title: string, description?: string) {
       return metadata
     } else {
       const metadata: Metadata = {
-        title: ``,
-        description: ``,
+        title: title,
+        description: description,
         icons: '',
         manifest: ''
       }

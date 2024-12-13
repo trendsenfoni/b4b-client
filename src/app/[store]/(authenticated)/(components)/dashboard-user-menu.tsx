@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenuTrigger, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuItem, DropdownMenuContent, DropdownMenu, DropdownMenuGroup, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuSubContent, DropdownMenuShortcut, DropdownMenuPortal } from "@/components/ui/dropdown-menu"
 import ThemeToggleButton from '@/components/theme-toggle-button'
 import Link from 'next/link'
-import SignOutButton from './signout-button'
+import { SignOutButton } from './signout-button'
 import { FC, useEffect, useState } from 'react'
 import Cookies from 'js-cookie'
 import { MemberType } from '@/types/MemberType'

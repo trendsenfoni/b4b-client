@@ -49,7 +49,7 @@ const RootLayout = async ({ children }: Props) => {
           <link rel="manifest" href={`${process.env.NEXT_PUBLIC_API_URI}/pub/stores/${store.identifier}/manifest`} />
         </>}
         {!store.identifier && <>
-          <link rel="icon" href={`/img/icon.png`} type="image/png" />
+          <link rel="icon" href={`/img/icon.svg`} type="image/svg+xml" />
           <link rel="manifest" href={`/manifest.json`} />
         </>}
       </head>

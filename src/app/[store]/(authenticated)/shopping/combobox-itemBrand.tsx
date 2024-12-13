@@ -39,15 +39,15 @@ export function ComboboxItemBrand({
   width = "w-300px"
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [token, settoken] = useState('')
+
   const [obj, setObj] = useState<string | undefined>(defaultValue)
   const [list, setList] = useState<string[]>([])
   const [search, setSearch] = useState('')
+  const [token, settoken] = useState('')
   const { toast } = useToast()
   const [loading, setLoading] = useState(false)
 
   const load = (s?: string) => {
-
     setLoading(true)
     getList(`/${store}/items/brands?search=${s || search || ''}`, token)
       .then(result => {
@@ -58,7 +58,6 @@ export function ComboboxItemBrand({
   }
 
   useEffect(() => { !token && settoken(Cookies.get('token') || '') }, [])
-  // useEffect(() => { token && load() }, [token])
   useEffect(() => { token && load() }, [token, search])
 
   return (<div>

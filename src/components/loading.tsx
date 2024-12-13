@@ -1,4 +1,4 @@
-export const Loading = () => {
+export function Loading() {
   return (
     <svg
       className="animate-spin -ml-1 mr-3 h-5 w-5"
@@ -22,5 +22,3 @@ export const Loading = () => {
     </svg>
   )
 }
-
-export default Loading

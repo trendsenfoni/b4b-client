@@ -5,6 +5,22 @@ interface Props {
   onClick?: () => void
   className?: string
 }
+
+export function ButtonBack({
+  href = '#',
+  onClick,
+  className
+}: Props) {
+  return (
+    <Link
+      className={`px-2 py-1 border rounded ${className}`}
+      href={href}
+      onClick={() => onClick && onClick()}>
+      <i className='fa-solid fa-chevron-left'></i>
+    </Link>
+  )
+}
+
 export function RowButtonEdit({
   href = '#',
   onClick,
@@ -16,6 +32,21 @@ export function RowButtonEdit({
       href={href}
       onClick={() => onClick && onClick()}>
       <i className="fa-solid fa-edit"></i>
+    </Link>
+  )
+}
+
+export function RowButtonView({
+  href = '#',
+  onClick,
+  className
+}: Props) {
+  return (
+    <Link
+      className={`px-2 py-1 bg-emerald-600 text-white  rounded-sm ${className}`}
+      href={href}
+      onClick={() => onClick && onClick()}>
+      <i className="fa-solid fa-eye"></i>
     </Link>
   )
 }

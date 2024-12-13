@@ -5,7 +5,7 @@ import { useToast } from '@/components/ui/use-toast'
 import { useEffect, useState } from 'react'
 
 import { PaginationType } from '@/types/PaginationType'
-import Loading from '@/components/loading'
+import { Loading } from '@/components/loading'
 import {
   Table,
   TableBody,
@@ -36,9 +36,10 @@ import { ComboboxItemBrand } from './combobox-itemBrand'
 import { AddToCart } from './add-to-cart'
 interface Props {
   store: string
+  onCartChange?: () => void
 }
 
-export function ItemList({ store }: Props) {
+export function ItemList({ store, onCartChange }: Props) {
   const [token, setToken] = useState('')
   const [list, setList] = useState<ItemType[]>([])
 
@@ -152,11 +153,11 @@ export function ItemList({ store }: Props) {
               <div className='grid grid-cols-12 w-full'>
                 <div className='col-span-4 flex flex-col  text-xs text-muted-foreground'>
                   <span >{e.code}</span>
-                  <span >{e.group}</span>
+                  <span >{e.group} Group</span>
                 </div>
                 <div className='col-span-3 flex flex-col'>
-                  {e.brand}
-                  <span className='text-xs text-muted-foreground'>{e.manufacturerCode}</span>
+                  {e.brand} Marka
+                  <span className='text-xs text-muted-foreground'>{e.manufacturerCode} Uretirici</span>
                 </div>
                 <div className="col-span-3 font-bold flex flex-col text-right">
                   {(e.price || 0) > 0 && <>
@@ -169,8 +170,9 @@ export function ItemList({ store }: Props) {
                   </>}
                 </div>
                 <div className="col-span-2 flex justify-end align-m11iddle gap1-4 text-xl">
-                  <AddToCart item={e} onAddToCart={quantity => {
-                    alert(quantity)
+                  <AddToCart store={store} item={e} onAddToCart={quantity => {
+                    console.log('onAddToCart')
+                    onCartChange && onCartChange()
                   }} />
 
                 </div>

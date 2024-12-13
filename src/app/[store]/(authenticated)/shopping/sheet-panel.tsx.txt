@@ -1,0 +1,55 @@
+"use client"
+
+import { RowButtonAddNew } from '@/components/row-buttons'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import React, { ReactNode } from 'react'
+import { useState } from 'react'
+
+interface Props {
+  children?: ReactNode | string
+  trigger?: ReactNode | string
+  footer?: ReactNode | string
+  title?: ReactNode | string
+  description?: ReactNode | string
+
+}
+export function SheetPanel({ children, trigger, footer, title, description }: Props) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        {trigger}
+      </SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>{title}</SheetTitle>
+          <SheetDescription className='flex flex-col items-start text-foreground'>
+            {description}
+          </SheetDescription>
+        </SheetHeader>
+        <SheetContent className="px-3">
+          {children}
+        </SheetContent>
+        {footer &&
+          <SheetFooter>
+            <SheetClose asChild>
+              {footer}
+            </SheetClose>
+          </SheetFooter>
+        }
+      </SheetContent>
+    </Sheet>
+  )
+}
+

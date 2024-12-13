@@ -14,7 +14,7 @@ interface Props {
   store: string
 }
 
-export default function SignOutButton({ className = '', title = 'Exit', store }: Props) {
+export function SignOutButton({ className = '', title = 'Exit', store }: Props) {
   const router = useRouter()
 
   return (

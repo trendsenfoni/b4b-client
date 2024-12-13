@@ -1,44 +1,57 @@
 import { AddressField } from './AddressField'
 import { FirmType } from './FirmType'
+import { ItemType } from './ItemType'
 
-export interface OrderType {
+export interface OrderListType {
   _id?: string
-  firm?: FirmType
-  ioType?: number | 0 | 1
   issueDate?: string
+  shippedDate?: string
   documentNumber?: string
-  firmDocumentNumber?: string
   lineCount?: number
-  quantity?: number
-  total?: number
+  tQuantity?: number
+  deliveredQuantity?: number
+  remainingQuantity?: number
+  totalAmount?: number
   currency?: string | 'USD' | 'TRY' | 'EUR' | 'RUB' | 'GBP' | undefined
   taxAmount?: number
   withHoldingTaxAmount?: number
-  taxInclusiveTotal?: number
-  note?: string
+  taxInclusiveAmount?: number
+  description?: string
+  status?: string | undefined | 'pending' | 'waitingForApproval' | 'approved' | 'declined' | 'preparing' | 'shipped'
+}
+
+export interface OrderType {
+  _id?: string
+  issueDate?: string
+  shippedDate?: string
+  documentNumber?: string
+  description?: string
+  totalAmount?: number
+  taxAmount?: number
+  withHoldingTaxAmount?: number
+  taxInclusiveAmount?: number
+  currency?: string | 'USD' | 'TRY' | 'EUR' | 'RUB' | 'GBP' | undefined
+  lineCount?: number
+  lines: OrderLineType[]
+  status?: string | undefined | 'pending' | 'waitingForApproval' | 'approved' | 'declined' | 'preparing' | 'shipped'
   address?: AddressField
-  closed?: boolean
 }
 
 export interface OrderLineType {
   _id?: string
-  order?: OrderType
-  ioType?: number | 0 | 1
-  issueDate?: string
-  description?: string
+  item?: ItemType,
   quantity?: number
-  delivered?: number
-  remainder?: number
-  thickness?: number
-  width?: number
-  length?: number
-  weight?: number
+  deliveredQuantity?: number
+  remainingQuantity?: number
   price?: number
-  total?: number
-  currency?: string | 'USD' | 'TRY' | 'EUR' | 'RUB' | 'GBP' | undefined
+  amount?: number
+  discountAmount?: number,
+  expenseAmount?: number,
+  taxRate?: number
   taxAmount?: number
+  withHoldingTaxRate?: number
   withHoldingTaxAmount?: number
-  taxInclusiveTotal?: number
-  closed?: boolean
+  taxInclusiveAmount?: number
+  unit?: string
 }
 

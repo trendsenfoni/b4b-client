@@ -1,12 +1,12 @@
 {
   "background_color": "#070718",
-  "description": "Guven Sac Tedarik Yonetim Sistemi",
+  "description": "B4B TrendSenfoni",
   "dir": "ltr",
   "display": "standalone",
-  "name": "GuvenSac",
+  "name": "B4B",
   "orientation": "portrait-primary",
   "scope": "/",
-  "short_name": "GuvenSac",
+  "short_name": "B4B",
   "start_url": "/",
   "theme_color": "#a82925",
   "prefer_related_applications": false,
@@ -23,9 +23,9 @@
   },
   "icons": [
     {
-      "src": "img/icon.png",
+      "src": "img/icon.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any"
     }
   ],

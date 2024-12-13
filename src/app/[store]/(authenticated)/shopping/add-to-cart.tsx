@@ -1,6 +1,6 @@
 "use client"
 
-import { RowButtonAddNew } from '@/components/row-buttons'
+import { ButtonBack, RowButtonAddNew } from '@/components/row-buttons'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,23 +14,52 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { useToast } from '@/components/ui/use-toast'
+import { postItem } from '@/lib/fetch'
 import { moneyFormat } from '@/lib/utils'
 import { ItemType } from '@/types/ItemType'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import Cookies from 'js-cookie'
 interface Props {
+  store: string
   item: ItemType
   onAddToCart?: (quantity: number) => void
 }
-export function AddToCart({ item, onAddToCart }: Props) {
+export function AddToCart({ store, item, onAddToCart }: Props) {
   const [quantity, setQuantity] = useState(1)
   const [total, setTotal] = useState(1 * item.price!)
   const [netTotal, setNetTotal] = useState(1 * item.price! + item.price! * item.vatRate! / 100)
+
+  const [token, settoken] = useState('')
+  const { toast } = useToast()
+  const [loading, setLoading] = useState(false)
+
+  const saveToCart = () => {
+    return new Promise<void>((resolve, reject) => {
+      setLoading(true)
+      postItem(`/${store}/carts`, token, { item: item, quantity: quantity })
+        .then(result => {
+          setLoading(false)
+        })
+        .catch(err => {
+          setLoading(false)
+          toast({ title: 'Error', description: err || '', variant: 'destructive' })
+          reject(err)
+        })
+
+    })
+  }
+
+  useEffect(() => { !token && settoken(Cookies.get('token') || '') }, [])
+  // useEffect(() => { token && load() }, [token, search])
+
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" className='bg-primary px-3 py-1'><i className="fa-solid fa-square-plus"></i></Button>
-        {/* <RowButtonAddNew onClick={() => null} /> */}
+        <Button variant="outline" className='bg-orange-600 text-white px-3 py-1'>
+          <i className="fa-solid fa-cart-plus"></i>
+        </Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -65,11 +94,21 @@ export function AddToCart({ item, onAddToCart }: Props) {
 
         </div>
         <SheetFooter>
-          <SheetClose asChild>
-            <Button onClick={() => {
-              onAddToCart && onAddToCart(quantity)
-            }}>Ekle</Button>
-          </SheetClose>
+          <div className='flex justify-between w-full mt-4'>
+            <SheetClose asChild>
+              <Button variant={'outline'} ><i className='fa-solid fa-chevron-left'></i></Button>
+            </SheetClose>
+            <SheetClose asChild onClick={() => onAddToCart && onAddToCart(quantity)}>
+              <Button onClick={() => {
+                saveToCart()
+                  .then(result => {
+                  })
+                  .catch(err => toast({ title: 'Error', description: err || '', variant: 'destructive' }))
+              }}>
+                Ekle
+              </Button>
+            </SheetClose>
+          </div>
         </SheetFooter>
       </SheetContent>
     </Sheet>

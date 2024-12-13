@@ -1,19 +1,21 @@
 "use client"
 import { BreadcrumbAbi } from '@/components/breadcrumb'
+import { CashFlowList } from './cashFlow-list'
 
 interface Props {
   params: {
     store: string
   }
 }
-export default function AccountingPage({ params }: Props) {
+export default function OrdersPage({ params }: Props) {
 
   return (<>
-    <BreadcrumbAbi store={params.store} list={[
-      { href: `/accounting`, children: "Cari" },
-    ]} />
-    <h1 ><i className="fa-solid fa-file-invoice me-2"></i> Cari</h1>
-    <hr />
+    <div className='flex justify-between'>
+      <BreadcrumbAbi store={params.store} list={[
+        { href: `/cashFlow`, children: "Cari Hareketler" },
+      ]} />
 
+    </div>
+    <CashFlowList store={params.store} />
   </>)
 }
